@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API</h1>
+    <button onclick="api()">Test Now</button>
+    <script>
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                authorization : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmY2NiZTVlZTliZTRiMWNiNDk0ZWU2MyIsImlhdCI6MTYwODc4MTA1OCwiZXhwIjoxNjExMzczMDU4fQ.nEfAivEQX3DcBnATNtHtb6xSBfSOMC-vZkQbrlz3iN0'
+            }
+        }
+        const api = () => {
+                fetch(`http://192.168.29.75:5000/api/v1/users/student`, options)
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
+            }
+    </script>
+</body>
+</html>
