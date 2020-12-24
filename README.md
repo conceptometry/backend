@@ -1,6 +1,6 @@
 # Conceptometry API
 
-> Backend API for DevCamper application, which is a bootcamp directory website
+> Backend API for Conceptometry Application made with Express JS
 
 ## Usage
 
