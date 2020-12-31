@@ -1,14 +1,14 @@
 {
-  "name": "kamalslms",
-  "version": "1.0.0",
-  "description": "",
+  "name": "conceptometry-backend",
+  "version": "0.7.2",
+  "description": "> Backend API for Conceptometry Application made with Express JS",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev:start": "nodemon server.js"
   },
   "author": "Yashraj Pahwa",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
@@ -32,5 +32,16 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conceptometry/backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/conceptometry/backend/issues"
+  },
+  "homepage": "https://github.com/conceptometry/backend#readme"
 }

@@ -11,13 +11,22 @@ const advancedResultsFindBy = require('../utils/advancedResultsFindBy');
 exports.getLectures = asyncHandler(async (req, res, next) => {
 	let findBy;
 	if (req.user.role === 'student') {
-		findBy = { student: req.user.id };
-	}
-	if (req.user.role === 'teacher') {
-		findBy = { teacher: req.user.id };
+		findBy = { student: req.user._id };
+	} else if (req.user.role === 'teacher') {
+		findBy = { byUser: req.user._id };
 	}
 
 	advancedResultsFindBy(Lecture, findBy, req, res, next);
+});
+
+// @desc   Get next lectures
+// @route  GET /api/v1/lecture/next
+// @access Private
+exports.getNextLectures = asyncHandler(async (req, res, next) => {
+	const lectures = await Lecture.find({ duration: { $gt: new Date() } });
+	res
+		.status(200)
+		.json({ success: true, count: lectures.count, message: lectures });
 });
 
 // @desc   Get lecture by ID

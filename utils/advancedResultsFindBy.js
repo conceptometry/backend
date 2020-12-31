@@ -38,7 +38,6 @@ const advancedResultsFindBy = async (
 	);
 
 	// Finding resource
-	// const pqs = JSON.parse(queryStr);
 	const qs = ',' + queryStr.split('{')[1];
 	const findquery = JSON.stringify(find).split('}')[0];
 	let fq;
@@ -94,6 +93,8 @@ const advancedResultsFindBy = async (
 			page: page + 1,
 			limit,
 		};
+	} else {
+		pagination.next = null;
 	}
 
 	if (startIndex > 0) {
@@ -101,6 +102,8 @@ const advancedResultsFindBy = async (
 			page: page - 1,
 			limit,
 		};
+	} else {
+		pagination.prev = null;
 	}
 
 	res.status(200).json({

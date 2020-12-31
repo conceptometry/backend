@@ -12,8 +12,7 @@ exports.getAssignments = asyncHandler(async (req, res, next) => {
 	let findBy;
 	if (req.user.role === 'teacher') {
 		findBy = { byUser: req.user._id };
-	}
-	if (req.user.role === 'student') {
+	} else if (req.user.role === 'student') {
 		findBy = { student: req.user._id };
 	}
 	// Do a query
