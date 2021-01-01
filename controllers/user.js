@@ -51,7 +51,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 			return next(
 				new ErrorResponse(
 					`Field/fields cannot be modified after registration`,
-					403
+					401
 				)
 			);
 		} else {
@@ -73,7 +73,8 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
 		req.body.email ||
 		req.body.phone ||
 		req.body.username ||
-		req.body.teacher
+		req.body.teacher ||
+		req.body.role
 	) {
 		return next(
 			new ErrorResponse(
@@ -91,6 +92,59 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
 		success: true,
 		message: user,
 	});
+});
+
+// @desc   Update user Profile Photo
+// @route  PUT /api/v1/users/me/photo
+// @access Private
+exports.updateProfilePhoto = asyncHandler(async (req, res, next) => {
+	if (!req.files) {
+		return next(new ErrorResponse(`Please upload a file`, 400));
+	}
+	const file = req.files.file;
+	// check file type
+	if (!file.mimetype.startsWith('image/jpeg' || 'image/png' || 'image/jpg')) {
+		return next(new ErrorResponse(`Please upload a jpeg or a png file`, 400));
+	}
+	// check file size
+	const fileSizeInMB = Math.round(process.env.STUDENT_MAX_FILE_SIZE / 1000000);
+	if (file.size > process.env.STUDENT_MAX_FILE_SIZE) {
+		return next(
+			new ErrorResponse(
+				`Please upload a file smaller than ${fileSizeInMB} MB`,
+				400
+			)
+		);
+	}
+
+	// rename file
+	file.name = `profile-image_${req.user.id}${path.parse(file.name).ext}`;
+	file.mv(
+		`${process.env.PROFILE_IMAGE_UPLOAD_PATH}/${file.name}`,
+		async (err) => {
+			if (err) {
+				console.log(err);
+				return next(new ErrorResponse(`Problem with file upload`, 500));
+			}
+
+			const user = await findByIdAndUpdate(
+				req.user.id,
+				{
+					profilePhoto: `${req.protocol}://${req.get(
+						'host'
+					)}/uploads/user/profile-image/${file.name}`,
+				},
+				{
+					new: true,
+					runValidators: true,
+				}
+			);
+			res.status(200).json({
+				success: true,
+				message: user,
+			});
+		}
+	);
 });
 
 // @desc   Update Password for Logged In user

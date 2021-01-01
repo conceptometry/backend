@@ -23,10 +23,28 @@ exports.getLectures = asyncHandler(async (req, res, next) => {
 // @route  GET /api/v1/lecture/next
 // @access Private
 exports.getNextLectures = asyncHandler(async (req, res, next) => {
-	const lectures = await Lecture.find({ duration: { $gt: new Date() } });
-	res
-		.status(200)
-		.json({ success: true, count: lectures.count, message: lectures });
+	let lectures;
+	if (req.user.role === 'student') {
+		lectures = await Lecture.findOne({
+			student: req.user._id,
+			eventTime: { $gte: new Date() },
+		})
+			.sort('eventTime')
+			.select('eventTime name duration subject');
+	}
+	if (req.user.role === 'teacher') {
+		lectures = await Lecture.findOne({
+			byUser: req.user._id,
+			eventTime: { $gte: new Date() },
+		})
+			.sort('eventTime')
+			.select('eventTime name duration subject');
+	}
+	res.status(200).json({
+		success: true,
+		count: lectures.length,
+		message: lectures,
+	});
 });
 
 // @desc   Get lecture by ID

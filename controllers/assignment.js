@@ -12,19 +12,12 @@ exports.getAssignments = asyncHandler(async (req, res, next) => {
 	let findBy;
 	if (req.user.role === 'teacher') {
 		findBy = { byUser: req.user._id };
-	} else if (req.user.role === 'student') {
+	}
+	if (req.user.role === 'student') {
 		findBy = { student: req.user._id };
 	}
 	// Do a query
-	advancedResultsFindBy(
-		Assignment,
-		findBy,
-		req,
-		res,
-		next,
-		{ path: 'student', select: 'name' },
-		{ path: 'byUser', select: 'name' }
-	);
+	advancedResultsFindBy(Assignment, findBy, req, res, next);
 });
 
 // @desc   Get specific assignment by id
@@ -180,7 +173,7 @@ exports.uploadTeacherMaterial = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Please upload a pdf file`, 400));
 	}
 	// check file size
-	const fileSizeInMB = Math.round(process.env.MAX_FILE_SIZE / 1000000);
+	const fileSizeInMB = Math.round(process.env.TEACHER_MAX_FILE_SIZE / 1000000);
 	if (file.size > process.env.TEACHER_MAX_FILE_SIZE) {
 		return next(
 			new ErrorResponse(

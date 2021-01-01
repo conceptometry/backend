@@ -197,7 +197,7 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Please upload a pdf file`, 400));
 	}
 	// check file size
-	const fileSizeInMB = Math.round(process.env.MAX_FILE_SIZE / 1000000);
+	const fileSizeInMB = Math.round(process.env.STUDENT_MAX_FILE_SIZE / 1000000);
 	if (file.size > process.env.STUDENT_MAX_FILE_SIZE) {
 		return next(
 			new ErrorResponse(
