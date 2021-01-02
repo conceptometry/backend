@@ -9,14 +9,14 @@ Rename "config/config.env.env" to "config/config.env" and update the values/sett
 ## Install Dependencies
 
 ```
-npm i
+npm install
 ```
 
 ## Run App
 
 ```
 # Run in dev mode
-npm run dev
+npm run dev:start
 
 # Run in prod mode
 npm start
