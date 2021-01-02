@@ -1,6 +1,7 @@
 const asyncHandler = require('../middlewares/async');
 const advancedResultsFindBy = require('../utils/advancedResultsFindBy');
 const User = require('../models/user');
+const path = require('path');
 const { findByIdAndUpdate } = require('../models/user');
 const ErrorResponse = require('../utils/errorResponse');
 
@@ -103,8 +104,8 @@ exports.updateProfilePhoto = asyncHandler(async (req, res, next) => {
 	}
 	const file = req.files.file;
 	// check file type
-	if (!file.mimetype.startsWith('image/jpeg' || 'image/png' || 'image/jpg')) {
-		return next(new ErrorResponse(`Please upload a jpeg or a png file`, 400));
+	if (!file.mimetype.startsWith('image/jpeg' || 'image/jpg')) {
+		return next(new ErrorResponse(`Please upload a jpeg file`, 400));
 	}
 	// check file size
 	const fileSizeInMB = Math.round(process.env.STUDENT_MAX_FILE_SIZE / 1000000);
@@ -127,7 +128,7 @@ exports.updateProfilePhoto = asyncHandler(async (req, res, next) => {
 				return next(new ErrorResponse(`Problem with file upload`, 500));
 			}
 
-			const user = await findByIdAndUpdate(
+			const user = await User.findByIdAndUpdate(
 				req.user.id,
 				{
 					profilePhoto: `${req.protocol}://${req.get(

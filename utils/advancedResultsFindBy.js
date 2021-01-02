@@ -69,6 +69,13 @@ const advancedResultsFindBy = async (
 	const startIndex = (page - 1) * limit;
 	const endIndex = page * limit;
 	const total = await model.countDocuments(pfq);
+	let pages;
+
+	if (limit > total) {
+		pages = 1;
+	} else {
+		pages = Math.ceil(total / limit);
+	}
 
 	query = query.skip(startIndex).limit(limit);
 
@@ -110,6 +117,7 @@ const advancedResultsFindBy = async (
 		success: true,
 		count: results.length,
 		pagination,
+		pages,
 		message: results,
 	});
 };
