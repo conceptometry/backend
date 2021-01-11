@@ -5,6 +5,44 @@ const path = require('path');
 const { findByIdAndUpdate } = require('../models/user');
 const ErrorResponse = require('../utils/errorResponse');
 
+const sendTokenResponse = (user, status, res) => {
+	// Give back a token
+	const token = user.getSignedJWT();
+	const options = {
+		expires: new Date(
+			Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+		),
+		httpOnly: true,
+	};
+
+	if (process.env.NODE_ENV !== 'development') {
+		options.secure = true;
+	}
+
+	res
+		.status(status)
+		.cookie('token', token, options)
+		.json({
+			success: true,
+			message: true,
+			token,
+			user: {
+				_id: user._id,
+				subject: user.subject,
+				name: user.name,
+				role: user.role,
+				profilePhoto: user.profilePhoto,
+				feePayed: user.feePayed,
+				isActive: user.isActive,
+				email: user.email,
+				grade: user.grade,
+				phone: user.phone,
+				parentsName: user.parentsName,
+				parentsEmail: user.parentsEmail,
+			},
+		});
+};
+
 // @desc   Get all students
 // @route  GET /api/v1/users/student
 // @access Private (teacher)

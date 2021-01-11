@@ -38,6 +38,7 @@ const advancedResultsFindBy = async (
 	);
 
 	// Finding resource
+
 	const qs = ',' + queryStr.split('{')[1];
 	const findquery = JSON.stringify(find).split('}')[0];
 	let fq;

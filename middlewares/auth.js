@@ -18,7 +18,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
 	try {
 		// Verify token
 		const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-		req.user = await User.findById(decoded.id);
+		req.user = await User.findById(decoded.id)
+			.select('-resetPasswordExpire -resetPasswordToken')
+			.populate({ path: 'teacher', select: 'name subject' });
 		if (req.user.isActive === false) {
 			return next(new ErrorResponse('Only active users can login', 401));
 		}

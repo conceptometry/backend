@@ -30,6 +30,7 @@ const corsOrigin = [
 	'http://127.0.0.1:3000',
 	'http://127.0.0.1:8080',
 	'http://192.168.29.75:3000',
+	'https://student.conceptometry.com',
 ];
 const corsOptions = {
 	origin: corsOrigin,
@@ -50,7 +51,7 @@ app.use(xss());
 // Rate limit an IP
 const limiter = rateLimit({
 	windowMs: 10 * 60 * 1000, // 10 minutes
-	max: 327,
+	max: 279,
 });
 
 app.use(limiter);
@@ -80,12 +81,14 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 // If we are in development mode, server base route
-app.get('/', (req, res) => {
-	res.status(200).json({
-		success: true,
-		message: `The API is working on port ${process.env.PORT}`,
+if (process.env.NODE_ENV === 'development') {
+	app.get('/', (req, res) => {
+		res.status(200).json({
+			success: true,
+			message: `The API is working on port ${process.env.PORT}`,
+		});
 	});
-});
+}
 
 // Connect to DB
 dbConnect();
