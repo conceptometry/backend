@@ -1,6 +1,6 @@
 {
   "name": "conceptometry-backend",
-  "version": "0.7.2",
+  "version": "0.9.4",
   "description": "> Backend API for Conceptometry Application made with Express JS",
   "main": "server.js",
   "scripts": {
