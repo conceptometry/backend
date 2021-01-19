@@ -68,6 +68,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Enable JSON
 app.use(express.json({ limit: '50mb' }));
 
+app.use((req, res, next) => {
+	if (req.query.limit < 1 || req.query.page < 1) {
+		return res.status(400).json({
+			success: false,
+			message: 'Invalid arguments passed',
+		});
+	} else {
+		next();
+	}
+});
+
 // Use routes file
 app.use('/api/v1', v1Routes);
 
