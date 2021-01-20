@@ -50,7 +50,9 @@ exports.getSubmission = asyncHandler(async (req, res, next) => {
 				{ _id: req.params.id },
 				req,
 				res,
-				next
+				next,
+				{ path: 'assignment', select: 'name' },
+				{ path: 'user', select: 'name' }
 			);
 		} else if (req.user.role === 'student') {
 			if (req.user.id !== submission.user.toString()) {
@@ -95,7 +97,10 @@ exports.getSubmissionsByAssignment = asyncHandler(async (req, res, next) => {
 				assignment: req.params.assignmentId,
 			},
 			req,
-			res
+			res,
+			next,
+			{ path: 'assignment', select: 'name' },
+			{ path: 'user', select: 'name' }
 		);
 	}
 });

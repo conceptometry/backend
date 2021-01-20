@@ -33,6 +33,7 @@ exports.getAssignment = asyncHandler(async (req, res, next) => {
 				path: 'byUser',
 				select: 'name',
 			})
+			.populate({ path: 'student', select: 'name' })
 			.select(fields);
 		if (!assignment) {
 			return next(
@@ -46,10 +47,12 @@ exports.getAssignment = asyncHandler(async (req, res, next) => {
 		}
 	} else {
 		const { id } = req.params;
-		const assignment = await Assignment.findById(id).populate({
-			path: 'byUser',
-			select: 'name',
-		});
+		const assignment = await Assignment.findById(id)
+			.populate({
+				path: 'byUser',
+				select: 'name',
+			})
+			.populate({ path: 'student', select: 'name' });
 		if (!assignment) {
 			return next(
 				new ErrorResponse(`The assignment with id ${id} does not exist`, 404)
