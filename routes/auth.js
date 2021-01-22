@@ -20,7 +20,9 @@ const limit = rateLimit({
 	max: 80, // limit each IP to 50 requests per windowMs
 });
 
-router.route('/initiateuser').post(sendMailToInitiateUser, limit);
+router
+	.route('/initiateuser')
+	.post(protect, authorize('teacher'), sendMailToInitiateUser, limit);
 router.route('/register/:registerToken').post(register, limit);
 router.route('/forgotpassword').post(forgotPassword, limit);
 router.route('/resetpassword/:resetpasswordtoken').put(resetPassword, limit);

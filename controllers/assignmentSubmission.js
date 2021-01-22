@@ -141,6 +141,8 @@ exports.markSubmission = asyncHandler(async (req, res, next) => {
 		submissionDate,
 		assignment,
 		user,
+		marks,
+		remarks,
 	} = req.body;
 	const submission = await AssignmentSubmission.findById(id);
 	const findAssignment = await Assignment.findById(submission.assignment);
@@ -160,13 +162,22 @@ exports.markSubmission = asyncHandler(async (req, res, next) => {
 		user
 	) {
 		return next(new ErrorResponse(`These fields cannot be edited`, 401));
+	} else if (!marks || !remarks) {
+		return next(new ErrorResponse(`These fields cannot be left blank`, 400));
 	} else {
 		const newSubmission = await AssignmentSubmission.findByIdAndUpdate(
-			id,
+			req.params.id,
 			req.body,
-			{ new: true, runValidators: true }
+			{
+				new: true,
+				runValidators: true,
+			}
 		);
-		res.status(200).json({ success: true, message: newSubmission });
+		res.status(200).json({
+			success: true,
+			message: 'Assignment remarks have been submitted',
+			data: newSubmission,
+		});
 	}
 });
 
