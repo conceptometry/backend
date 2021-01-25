@@ -31,6 +31,7 @@ const corsOrigin = [
 	'http://127.0.0.1:8080',
 	'http://192.168.29.75:3000',
 	'https://student.conceptometry.com',
+	'https://conceptometryteachers.vercel.app',
 ];
 const corsOptions = {
 	origin: corsOrigin,

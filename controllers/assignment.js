@@ -75,7 +75,15 @@ exports.createAssignment = asyncHandler(async (req, res, next) => {
 			new ErrorResponse(`Please enter due date (number of days)`, 400)
 		);
 	}
-	if (!req.body.student) {
+	if (req.body.dueDate < 1) {
+		return next(new ErrorResponse(`Please enter a valid due date`, 400));
+	}
+	if (
+		!req.body.student ||
+		req.body.student.length < 1 ||
+		req.body.student.length === 0 ||
+		req.body.student === []
+	) {
 		return next(new ErrorResponse(`Please enter the assigned students`, 400));
 	}
 
@@ -94,7 +102,8 @@ exports.createAssignment = asyncHandler(async (req, res, next) => {
 	// Give back response
 	res.status(201).json({
 		success: true,
-		message: assignment,
+		message: 'A new assignment has been created',
+		data: assignment,
 	});
 
 	if (process.env.NODE_ENV !== 'production') {
@@ -137,6 +146,9 @@ exports.updateAssignment = asyncHandler(async (req, res, next) => {
 exports.deleteAssignment = asyncHandler(async (req, res, next) => {
 	const { id } = req.params;
 	const findAssignment = await Assignment.findById(id);
+	if (!findAssignment) {
+		return next(new ErrorResponse(`No assignment found`, 404));
+	}
 	if (findAssignment.byUser.toString() !== req.user.id) {
 		return next(
 			new ErrorResponse(`Only the owner has access to delete assignment`, 400)

@@ -6,11 +6,9 @@ const {
 	getLecture,
 	updateLecture,
 	deleteLecture,
-	getNextLectures,
 } = require('../controllers/lecture');
 const { protect, authorize } = require('../middlewares/auth');
 
-router.route('/next').get(protect, getNextLectures);
 router
 	.route('/')
 	.get(protect, getLectures)
