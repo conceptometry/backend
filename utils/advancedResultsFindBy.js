@@ -31,11 +31,11 @@ const advancedResultsFindBy = async (
 	// Create query string
 	let queryStr = JSON.stringify(reqQuery);
 
-	// Create operators ($gt, $gte, etc)
-	queryStr = queryStr.replace(
-		/\b(gt|gte|lt|lte|in)\b/g,
-		(match) => `$${match}`
-	);
+	// // Create operators ($gt, $gte, etc)
+	// queryStr = queryStr.replace(
+	// 	/\b(gt|gte|lt|lte|in)\b/g,
+	// 	(match) => `$${match}`
+	// );
 
 	// Finding resource
 

@@ -98,7 +98,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 				new: true,
 				runValidators: true,
 			});
-			res.status(200).json({ success: true, message: newUser });
+			res.status(200).json({ success: true, message: `Updated user ${newUser.name}`, data:  newUser });
 		}
 	}
 });
