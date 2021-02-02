@@ -30,6 +30,7 @@ const corsOrigin = [
 	'http://127.0.0.1:3000',
 	'http://127.0.0.1:8080',
 	'http://192.168.29.75:3000',
+	'http://192.168.29.75:8080',
 	'https://student.conceptometry.com',
 	'https://conceptometryteachers.vercel.app',
 ];
@@ -92,15 +93,12 @@ app.use(cookieParser());
 // Use morgan
 app.use(morgan('dev'));
 
-// If we are in development mode, server base route
-if (process.env.NODE_ENV === 'development') {
-	app.get('/', (req, res) => {
-		res.status(200).json({
-			success: true,
-			message: `The API is working on port ${process.env.PORT}`,
-		});
+app.get('/', (req, res) => {
+	res.status(200).json({
+		success: true,
+		message: `healthy`,
 	});
-}
+});
 
 // Connect to DB
 dbConnect();

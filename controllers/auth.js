@@ -12,7 +12,7 @@ const sendTokenResponse = (user, status, res) => {
 		expires: new Date(
 			Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
 		),
-		httpOnly: true,
+		httpOnly: false,
 	};
 
 	if (process.env.NODE_ENV !== 'development') {

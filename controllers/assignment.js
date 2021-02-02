@@ -155,7 +155,7 @@ exports.deleteAssignment = asyncHandler(async (req, res, next) => {
 		);
 	}
 	const assignment = await Assignment.findByIdAndDelete(id);
-	res.status(204).json({
+	res.status(200).json({
 		success: true,
 		message: `Assignment ${assignment.name} has been deleted`,
 	});

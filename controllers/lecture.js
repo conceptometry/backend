@@ -68,10 +68,21 @@ exports.getLecture = asyncHandler(async (req, res, next) => {
 		}
 
 		{
-			advancedResultsFindBy(Lecture, { _id: req.params.id }, req, res, next, {
-				path: 'byUser',
-				select: 'name',
-			});
+			advancedResultsFindBy(
+				Lecture,
+				{ _id: req.params.id },
+				req,
+				res,
+				next,
+				{
+					path: 'byUser',
+					select: 'name',
+				},
+				{
+					path: 'student',
+					select: 'name',
+				}
+			);
 		}
 	}
 });
@@ -119,7 +130,7 @@ exports.deleteLecture = asyncHandler(async (req, res, next) => {
 		await Lecture.findByIdAndDelete(req.params.id);
 		res.status(200).json({
 			success: true,
-			message: `Lecture with id ${lecture._id} has been deleted`,
+			message: `Lecture has been deleted`,
 		});
 	}
 });

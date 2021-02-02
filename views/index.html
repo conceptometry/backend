@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick='fetchData()'>Click</button>
+    <script >
+        const fetchData = async (e) => {
+        
+            const url = `http://192.168.29.75:5000/api/v1/auth/login`
+            const options = {
+                method: 'POST',
+                headers: {
+'Content-Security-Policy': 'unsafe-inline',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: 'kamaldeeppahwa@gmail.com', password: 'yash9raj' }),
+                credentials: 'same-origin',
+                withCredentials: true
+            }
+            try {
+                const res = await fetch(url, options)
+                const resJson = await res.json()
+                console.log(resJson)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        setTimeout(() => fetchData(), 2000)
+    </script>
+</body>
+</html>
