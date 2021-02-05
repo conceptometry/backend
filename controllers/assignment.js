@@ -1,4 +1,5 @@
 const Assignment = require('../models/assignment');
+const User = require('../models/user');
 const asyncHandler = require('../middlewares/async');
 const ErrorResponse = require('../utils/errorResponse');
 const advancedResultsFindBy = require('../utils/advancedResultsFindBy');
@@ -87,6 +88,19 @@ exports.createAssignment = asyncHandler(async (req, res, next) => {
 		return next(new ErrorResponse(`Please enter the assigned students`, 400));
 	}
 
+	req.body.student.map(async (s) => {
+		const student = await User.findById(s);
+		if (!student) {
+			return next(new ErrorResponse(`No student found with id ${s}`));
+		}
+		console.log(student);
+		if (student.teacher.toString() !== req.user.id) {
+			return next(
+				new ErrorResponse(`Student with id ${s} is not your student`)
+			);
+		}
+	});
+
 	//Set Due Date
 	const d = new Date();
 	let dueDate = d.setDate(d.getDate() + parseInt(req.body.dueDate));
@@ -122,6 +136,9 @@ exports.updateAssignment = asyncHandler(async (req, res, next) => {
 		return next(
 			new ErrorResponse(`Only the owner has access to update assignment`, 400)
 		);
+	}
+	if (req.body.student) {
+		return next(new ErrorResponse(`You cannot update the students`, 403));
 	} else if (req.body.dueDate) {
 		//Set Due Date
 		const d = new Date();
