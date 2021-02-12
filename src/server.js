@@ -19,24 +19,23 @@ const v1Routes = require('./routes');
 
 // Get environment variables
 dotenv.config({
-	path: './config/config.env',
+  path: './config/config.env',
 });
 
 // Initialize App
 const app = express();
 
+// Use cookie parser
+app.use(cookieParser());
+
 // Use cors
 const corsOrigin = [
-	'http://127.0.0.1:3000',
-	'http://127.0.0.1:8080',
-	'http://192.168.29.75:3000',
-	'http://192.168.29.75:8080',
-	'https://student.conceptometry.com',
-	'https://conceptometryteachers.vercel.app',
+  'https://student.conceptometry.com',
+  'https://teacher.conceptometry.com',
 ];
 const corsOptions = {
-	origin: corsOrigin,
-	optionsSuccessStatus: 200,
+  origin: corsOrigin,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -52,8 +51,8 @@ app.use(xss());
 
 // Rate limit an IP
 const limiter = rateLimit({
-	windowMs: 10 * 60 * 1000, // 10 minutes
-	max: 279,
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 279,
 });
 
 app.use(limiter);
@@ -71,14 +70,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({ limit: '50mb' }));
 
 app.use((req, res, next) => {
-	if (req.query.limit < 1 || req.query.page < 1) {
-		return res.status(400).json({
-			success: false,
-			message: 'Invalid arguments passed',
-		});
-	} else {
-		next();
-	}
+  if (req.query.limit < 1 || req.query.page < 1) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid arguments passed',
+    });
+  } else {
+    next();
+  }
 });
 
 // Use routes file
@@ -87,17 +86,14 @@ app.use('/api/v1', v1Routes);
 // Use error handler
 app.use(errorHandler);
 
-// Use cookie parser
-app.use(cookieParser());
-
 // Use morgan
 app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
-	res.status(200).json({
-		success: true,
-		message: `healthy`,
-	});
+  res.status(200).json({
+    success: true,
+    message: `healthy`,
+  });
 });
 
 // Connect to DB
@@ -107,16 +103,16 @@ dbConnect();
 const port = process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
-	console.log(
-		`Server running on port ${port} in ${process.env.NODE_ENV} mode`.green.bold
-	);
+  console.log(
+    `Server running on port ${port} in ${process.env.NODE_ENV} mode`.green.bold
+  );
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-	console.log(`Error [UHP]: ${err.message}`.red.underline);
-	// Close server connection
-	server.close(() => process.exit(1));
+  console.log(`Error [UHP]: ${err.message}`.red.underline);
+  // Close server connection
+  server.close(() => process.exit(1));
 });
 
 // End All

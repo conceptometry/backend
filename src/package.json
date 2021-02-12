@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev:start": "nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "author": "Yashraj Pahwa",
   "license": "MIT",
