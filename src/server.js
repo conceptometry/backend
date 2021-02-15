@@ -29,10 +29,20 @@ const app = express();
 app.use(cookieParser());
 
 // Use cors
-const corsOrigin = [
-  'https://student.conceptometry.com',
-  'https://teacher.conceptometry.com',
-];
+let corsOrigin;
+if (process.env.NODE_ENV === 'development') {
+  corsOrigin = [
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8080',
+    'https://student.conceptometry.com',
+    'https://teacher.conceptometry.com',
+  ];
+} else {
+  corsOrigin = [
+    'https://student.conceptometry.com',
+    'https://teacher.conceptometry.com',
+  ];
+}
 const corsOptions = {
   origin: corsOrigin,
   optionsSuccessStatus: 200,
