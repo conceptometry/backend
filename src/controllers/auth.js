@@ -144,6 +144,11 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
+  if (user.isActive === false) {
+    return next(
+      new ErrorResponse(`You can't login, please contact your teacher`, 401)
+    );
+  }
 
   // Check if password matches
   const isMatch = await user.matchPassword(password);

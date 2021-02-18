@@ -28,10 +28,4 @@ router.route('/forgotpassword').post(forgotPassword, limit);
 router.route('/resetpassword/:resetpasswordtoken').put(resetPassword, limit);
 router.route('/login').post(login, loginLimiter);
 
-// Dev Routes
-if (process.env.NODE_ENV === 'development') {
-  const devRoute = require('../controllers/devControllers');
-  router.route('/register').post(devRoute.register);
-}
-
 module.exports = router;
