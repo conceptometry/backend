@@ -1,3 +1,4 @@
 /node_modules*
 /config/config.env
 public/uploads/user/profile-image/profile-image_*
+.aws/
