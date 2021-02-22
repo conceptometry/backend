@@ -2,3 +2,5 @@
 /config/config.env
 public/uploads/user/profile-image/profile-image_*
 .aws/
+index.html
+views/

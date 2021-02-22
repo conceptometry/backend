@@ -249,9 +249,12 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
 
   s3.upload(params, async function (err, data) {
     if (err) {
-      return next(new ErrorResponse(err, 500));
+      console.log(err);
+      return next(new ErrorResponse(`Problem with file upload`, 500));
     } else {
-      console.log(data);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(data);
+      }
       const url = data.Location;
       const submissionMaterials = `${
         url.split('digitaloceanspaces.com')[0]
@@ -278,37 +281,4 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
       });
     }
   });
-
-  // file.mv(
-  // 	`${process.env.STUDENT_ASSIGNMENT_MATERIALS_UPLOAD_PATH}/${file.name}`,
-  // 	async (err) => {
-  // 		if (err) {
-  // 			console.log(err);
-  // 			return next(new ErrorResponse(`Problem with file upload`, 500));
-  // 		}
-  // 		const submissionMaterials = `${req.protocol}://${req.get(
-  // 			'host'
-  // 		)}/uploads/student/assignments/${file.name}`;
-  // 		const user = req.user._id;
-  // 		const assignment = req.params.assignmentId;
-  // 		const { submissionText } = req.body;
-  // 		let late;
-  // 		if (moment() > moment(findAssignment.dueDate)) {
-  // 			late = true;
-  // 		} else {
-  // 			late = false;
-  // 		}
-  // 		await AssignmentSubmission.create({
-  // 			submissionMaterials,
-  // 			user,
-  // 			assignment,
-  // 			submissionText,
-  // 			late: late,
-  // 		});
-  // 		res.status(200).json({
-  // 			success: true,
-  // 			message: `Response has been submitted`,
-  // 		});
-  // 	}
-  // );
 });
