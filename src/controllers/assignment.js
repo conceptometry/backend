@@ -5,6 +5,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const advancedResultsFindBy = require('../utils/advancedResultsFindBy');
 const path = require('path');
 const moment = require('moment');
+const aws = require('aws-sdk');
 
 // @desc   Get all assignments
 // @route  GET /api/v1/assignments
@@ -218,25 +219,65 @@ exports.uploadTeacherMaterial = asyncHandler(async (req, res, next) => {
   }
 
   // rename file
-  file.name = `assignment_${assignment._id}${path.parse(file.name).ext}`;
+  file.name = `${assignment._id}${path.parse(file.name).ext}`;
 
-  file.mv(
-    `${process.env.TEACHER_ASSIGNMENT_MATERIALS_UPLOAD_PATH}/${file.name}`,
-    async (err) => {
-      if (err) {
-        console.log(err);
-        return next(new ErrorResponse(`Problem with file upload`, 500));
+  aws.config.update({
+    accessKeyId: process.env.SPACES_ACCESS_KEY_ID,
+    secretAccessKey: process.env.SPACES_ACCESS_KEY,
+  });
+
+  const spacesEndpoint = new aws.Endpoint(process.env.SPACES_ENDPOINT);
+  const s3 = new aws.S3({
+    endpoint: spacesEndpoint,
+  });
+  const blob = req.files.file.data;
+  const params = {
+    Bucket: process.env.SPACES_NAME,
+    Key: `uploads/assignment-materials/${file.name}`,
+    Body: blob,
+    ACL: 'public-read',
+    ContentType: file.mimetype,
+  };
+
+  s3.upload(params, async function (err, data) {
+    if (err) {
+      console.log(err);
+      return next(new ErrorResponse(`Problem with file upload`, 500));
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(data);
       }
-
+      const url = data.Location;
+      const filePath = `${
+        url.split('digitaloceanspaces.com')[0]
+      }cdn.digitaloceanspaces.com${url.split('digitaloceanspaces.com')[1]}`;
       await Assignment.findByIdAndUpdate(req.params.id, {
-        teacherMaterials: `${req.protocol}://${req.get(
-          'host'
-        )}/uploads/teacher/assignments/${file.name}`,
+        teacherMaterials: filePath,
       });
       res.status(200).json({
         success: true,
         message: `Uploaded ${file.name}`,
       });
     }
-  );
+  });
+
+  // file.mv(
+  //   `${process.env.TEACHER_ASSIGNMENT_MATERIALS_UPLOAD_PATH}/${file.name}`,
+  //   async (err) => {
+  //     if (err) {
+  //       console.log(err);
+  //       return next(new ErrorResponse(`Problem with file upload`, 500));
+  //     }
+
+  //     await Assignment.findByIdAndUpdate(req.params.id, {
+  //       teacherMaterials: `${req.protocol}://${req.get(
+  //         'host'
+  //       )}/uploads/teacher/assignments/${file.name}`,
+  //     });
+  //     res.status(200).json({
+  //       success: true,
+  //       message: `Uploaded ${file.name}`,
+  //     });
+  //   }
+  // );
 });
