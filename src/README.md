@@ -16,13 +16,13 @@ npm install
 
 ```
 # Run in dev mode
-npm run dev:start
+npm run dev
 
 # Run in prod mode
 npm start
 ```
 
-Extensive documentation with examples [here](https://conceptometry-api-docs.netlify.app)
+Extensive documentation [here](https://conceptometry-api-docs.netlify.app)
 
 - Version: 0.9.0 Beta 1
 - License: MIT
